@@ -58,8 +58,9 @@
         }
       },
       DeleteEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
+        return '<li id="'+obj.id+'" class="delete list-group-item">'+
+               'Deleted '+obj.payload.ref_type+' '+obj.payload.ref+' '+
+               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       },
