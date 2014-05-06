@@ -183,8 +183,9 @@
                '</li>';
       },
       WatchEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
+        return '<li id="'+obj.id+'" class="watch list-group-item">'+
+               'Starred repository '+
+               '<a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       }
