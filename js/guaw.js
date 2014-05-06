@@ -135,8 +135,10 @@
                '</li>';
       },
       PullRequestEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
+        var action = obj.payload.action.charAt(0).toUpperCase() + obj.payload.action.slice(1);
+        return '<li id="'+obj.id+'" class="pull-request list-group-item">'+
+               action+' pull request <a href="https://github.com/'+obj.repo.name+'/pull/'+obj.payload.number+'">#'+obj.payload.number+'</a> '+
+               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       },
