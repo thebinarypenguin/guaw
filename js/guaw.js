@@ -65,28 +65,20 @@
                '</li>';
       },
       DeploymentEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
-               '</li>';
+        // Not visible in timelines
+        return '';
       },
       DeploymentStatusEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
-               '</li>';
+        // Not visible in timelines
+        return '';
       },
       DownloadEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
-               '</li>';
+        // No longer created
+        return '';
       },
       FollowEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
-               '</li>';
+        // Not visible in timelines
+        return '';
       },
       ForkEvent: function(obj) {
         return '<li id="'+obj.id+'" class="fork list-group-item">'+
@@ -96,16 +88,12 @@
                '</li>';
       },
       ForkApplyEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
-               '</li>';
+        // No longer created
+        return '';
       },
       GistEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
-               '</li>';
+        // No longer created
+        return '';
       },
       GollumEvent: function(obj) {
         return '<li id="'+obj.id+'" class="list-group-item">'+
@@ -171,10 +159,8 @@
                '</li>';
       },
       StatusEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
-               '</li>';
+        // Not visible in timelines
+        return '';
       },
       TeamAddEvent: function(obj) {
         return '<li id="'+obj.id+'" class="list-group-item">'+
