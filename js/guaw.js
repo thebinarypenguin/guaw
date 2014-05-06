@@ -89,8 +89,9 @@
                '</li>';
       },
       ForkEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
+        return '<li id="'+obj.id+'" class="fork list-group-item">'+
+               'Forked <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> '+
+               'to <a href="https://github.com/'+obj.payload.forkee.full_name+'">'+obj.payload.forkee.full_name+'</a> '+
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       },
@@ -119,8 +120,11 @@
                '</li>';
       },
       IssuesEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
+        var action = obj.payload.action.charAt(0).toUpperCase() + obj.payload.action.slice(1);
+        return '<li id="'+obj.id+'" class="issues list-group-item">'+
+               action+' issue '+
+               '<a href="'+obj.payload.issue.html_url+'">#'+obj.payload.issue.number+'</a> '+
+               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       },
