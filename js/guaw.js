@@ -39,10 +39,23 @@
                '</li>';
       },
       CreateEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
-               '</li>';
+        // repository
+        if (obj.payload.ref_type === 'repository') {
+          return '<li id="'+obj.id+'" class="create list-group-item">' +
+                 'Created '+obj.payload.ref_type+' '+
+                 '<a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
+                 '<small>'+this.formatDate(obj.created_at)+'</small>' +
+                 '</li>';
+        }
+        // branch or tag
+        if (obj.payload.ref_type === 'branch' || obj.payload.ref_type === 'tag') {
+          return '<li id="'+obj.id+'" class="create list-group-item">' +
+                 'Created '+obj.payload.ref_type+' '+
+                 '<a href="https://github.com/'+obj.repo.name+'/tree/'+obj.payload.ref+'">'+obj.payload.ref+'</a> '+
+                 'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
+                 '<small>'+this.formatDate(obj.created_at)+'</small>' +
+                 '</li>';
+        }
       },
       DeleteEvent: function(obj) {
         return '<li id="'+obj.id+'" class="list-group-item">'+
