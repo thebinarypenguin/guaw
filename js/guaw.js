@@ -31,8 +31,10 @@
                '<h4>'+obj.name+'<br><small>'+obj.login+'</small></h4>';
       },
       CommitCommentEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
+        return '<li id="'+obj.id+'" class="commit-comment list-group-item">'+
+               'Commented on commit <a href="'+obj.payload.comment.html_url+'">'+
+               obj.payload.comment.commit_id.substring(0,7)+'</a> ' +
+               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       },
