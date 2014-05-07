@@ -102,8 +102,10 @@
                '</li>';
       },
       IssueCommentEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
+        var type = (obj.payload.issue.pull_request ) ? 'pull request' : 'issue';
+        return '<li id="'+obj.id+'" class="issue-comment list-group-item">'+
+               'Commented on '+type+' <a href="'+obj.payload.comment.html_url+'">#'+obj.payload.issue.number+'</a> ' +
+               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       },
