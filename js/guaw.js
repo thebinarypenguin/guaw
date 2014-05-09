@@ -135,8 +135,8 @@
                '</li>';
       },
       PublicEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
+        return '<li id="'+obj.id+'" class="public list-group-item">'+
+               'Open sourced repository <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> '+
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       },
