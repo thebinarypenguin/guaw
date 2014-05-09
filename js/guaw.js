@@ -92,8 +92,12 @@
         return '';
       },
       GistEvent: function(obj) {
-        // No longer created
-        return '';
+        var action = obj.payload.action.charAt(0).toUpperCase() + obj.payload.action.slice(1);
+        return '<li id="'+obj.id+'" class="gist list-group-item">' +
+               action+'d gist '+
+               '<a href="'+obj.payload.gist.html_url+'">'+obj.payload.gist.id+'</a> '+
+               '<small>'+this.formatDate(obj.created_at)+'</small>' +
+               '</li>';
       },
       GollumEvent: function(obj) {
         return '<li id="'+obj.id+'" class="list-group-item">'+
