@@ -269,7 +269,7 @@
      */
     var poll = function() {
 
-      // Use a promise chain to keep are AJAX ducks in a row
+      // Use a promise chain to keep our AJAX ducks in a row
 
       var chain = fetchProfile();
 
