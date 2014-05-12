@@ -100,8 +100,20 @@
                '</li>';
       },
       GollumEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
+        var action = '';
+        var data = '';
+
+        for (var i=0; i<obj.payload.pages.length; i++) {
+          action = obj.payload.pages[i].action.charAt(0).toUpperCase() + obj.payload.pages[i].action.slice(1);
+          data += action +' wiki page <a href="'+obj.payload.pages[i].html_url+'">'+obj.payload.pages[i].title+'</a> ';
+
+          if (i>0 && i<obj.payload.pages.length-1) { data += ', ';     }
+          if (i>0 && i>obj.payload.pages.length-2) { data += ', and '; }
+        }
+
+        return '<li id="'+obj.id+'" class="gollum list-group-item">'+
+               data +
+               ' at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       },
