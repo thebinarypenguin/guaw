@@ -179,8 +179,10 @@
                '</li>';
       },
       ReleaseEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
+        return '<li id="'+obj.id+'" class="release list-group-item">'+
+               'Created release '+
+               '<a href="'+obj.payload.release.html_url+'">'+obj.payload.release.name+'</a> ' +
+               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       },
