@@ -161,8 +161,10 @@
                '</li>';
       },
       PullRequestReviewCommentEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
+        var num = obj.payload.comment.pull_request_url.substring(obj.payload.comment.pull_request_url.lastIndexOf('/')+1);
+        return '<li id="'+obj.id+'" class="pull-request-review-comment list-group-item">'+
+               'Commented on pull request <a href="'+obj.payload.comment.html_url+'">#'+num+'</a> ' +
+               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       },
