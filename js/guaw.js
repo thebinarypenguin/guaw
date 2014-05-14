@@ -6,7 +6,7 @@
 
     var settings = $.extend({
       username: 'octocat',
-      timeout: 60000,
+      timeout: 300,
       debug: false
     }, options);
 
@@ -300,7 +300,7 @@
       chain.then(function() { return fetchActivityPage(9);  });
       chain.then(function() { return fetchActivityPage(10); });
 
-      chain.always(function() { setTimeout(poll, settings.timeout); });
+      chain.always(function() { setTimeout(poll, settings.timeout*1000); });
     };
 
     // Engage!
