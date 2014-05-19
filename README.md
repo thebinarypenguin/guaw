@@ -2,6 +2,8 @@
 
 A jQuery plugin for displaying GitHub user activity in a handsome little widget
 
+[Check out the demo](http://thebinarypenguin.github.io/guaw/)
+
 # Details
 
 - Required jQuery 1.8 or later
