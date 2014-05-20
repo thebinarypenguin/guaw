@@ -6,7 +6,7 @@ A jQuery plugin for displaying GitHub user activity in a handsome little widget
 
 # Details
 
-- Required jQuery 1.8 or later
+- Requires jQuery 1.8 or later
 - Uses the GitHub Events API v3
 - Displays all available activity (not just the first page)
 
