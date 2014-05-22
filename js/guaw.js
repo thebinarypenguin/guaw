@@ -64,20 +64,8 @@
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       },
-      DeploymentEvent: function(obj) {
-        // Not visible in timelines
-        return '';
-      },
-      DeploymentStatusEvent: function(obj) {
-        // Not visible in timelines
-        return '';
-      },
       DownloadEvent: function(obj) {
         // No longer created
-        return '';
-      },
-      FollowEvent: function(obj) {
-        // Not visible in timelines
         return '';
       },
       ForkEvent: function(obj) {
@@ -140,12 +128,6 @@
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       },
-      PageBuildEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
-               '</li>';
-      },
       PublicEvent: function(obj) {
         return '<li id="'+obj.id+'" class="public list-group-item">'+
                'Open sourced repository <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> '+
@@ -183,16 +165,6 @@
                'Created release '+
                '<a href="'+obj.payload.release.html_url+'">'+obj.payload.release.name+'</a> ' +
                'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
-               '</li>';
-      },
-      StatusEvent: function(obj) {
-        // Not visible in timelines
-        return '';
-      },
-      TeamAddEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
                '<small>'+this.formatDate(obj.created_at)+'</small>'+
                '</li>';
       },
