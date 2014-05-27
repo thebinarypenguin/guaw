@@ -367,8 +367,9 @@
           var content = '';
 
           for (var i=0; i<data.length; i++) {
-            // TODO test that templates[data[i].type] exists before calling it
-            content += templates[data[i].type](data[i]);
+            if (templates[data[i].type]) {
+              content += templates[data[i].type](data[i]);
+            }
           }
 
           if (pageNumber === 1) { body.html(''); }
