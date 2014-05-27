@@ -10,170 +10,308 @@
       debug: false
     }, options);
 
-    // HTML templates (i.e. views)
-    var html = {
-      formatDate: function(string) {
-        var d = new Date(string);
-        var day = d.getDate();
-        var month = d.getMonth() + 1;
-        var year = d.getFullYear();
-        return month + '-' + day + '-' + year;
-      },
+    var templates = {
+      // The widget skeleton
       boilerplate: function() {
-        return '<div class="guaw">' +
+        return '<div class="guaw">'+
                  '<div class="guaw-head"></div>'+
-                 '<ul class="guaw-body"></ul>' +
-                 '<div class="guaw-foot">Powered by GUAW</div>' +
+                 '<ul class="guaw-body"></ul>'+
+                 '<div class="guaw-foot">Powered by GUAW</div>'+
                '</div>';
       },
+      // The user info header
       profile: function(obj) {
-        return '<img src="'+obj.avatar_url+'">' +
-               '<h4>'+obj.name+'<br><small>'+obj.login+'</small></h4>';
+        var avatar = obj.avatar_url,
+            name   = obj.name,
+            login  = obj.login;
+
+        return '<img src="'+avatar+'">'+
+               '<h4>'+name+'<br><small>'+login+'</small></h4>';
       },
+      // Event: Fires when the user comments on a commit
       CommitCommentEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="commit-comment list-group-item">'+
-               'Commented on commit <a href="'+obj.payload.comment.html_url+'">'+
-               obj.payload.comment.commit_id.substring(0,7)+'</a> ' +
-               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
+        var id         = obj.id,
+            date       = helpers.date(obj.created_at),
+            repoName   = obj.repo.name,
+            commentURL = obj.payload.comment.html_url,
+            commitID   = obj.payload.comment.commit_id.substring(0,7);
+
+        return '<li id="'+id+'" class="commit-comment list-group-item">'+
+                 'Commented on commit <a href="'+commentURL+'">'+commitID+'</a> '+
+                 'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+date+'</small>'+
                '</li>';
       },
+      // Event: Fires when the user creates a repository, branch, or tag
       CreateEvent: function(obj) {
-        // repository
-        if (obj.payload.ref_type === 'repository') {
-          return '<li id="'+obj.id+'" class="create list-group-item">' +
-                 'Created '+obj.payload.ref_type+' '+
-                 '<a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
-                 '<small>'+this.formatDate(obj.created_at)+'</small>' +
+        var id       = obj.id,
+            date     = helpers.date(obj.created_at),
+            repoName = obj.repo.name,
+            refType  = obj.payload.ref_type,
+            ref      = obj.payload.ref;
+
+        if (refType === 'repository') {
+          return '<li id="'+id+'" class="create list-group-item">'+
+                   'Created '+refType+' <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                   '<small>'+helpers.date(obj.created_at)+'</small>'+
                  '</li>';
         }
-        // branch or tag
-        if (obj.payload.ref_type === 'branch' || obj.payload.ref_type === 'tag') {
-          return '<li id="'+obj.id+'" class="create list-group-item">' +
-                 'Created '+obj.payload.ref_type+' '+
-                 '<a href="https://github.com/'+obj.repo.name+'/tree/'+obj.payload.ref+'">'+obj.payload.ref+'</a> '+
-                 'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
-                 '<small>'+this.formatDate(obj.created_at)+'</small>' +
+
+        if (refType === 'branch' || refType === 'tag') {
+          return '<li id="'+id+'" class="create list-group-item">'+
+                   'Created '+refType+' <a href="https://github.com/'+repoName+'/tree/'+ref+'">'+ref+'</a> '+
+                   'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                   '<small>'+date+'</small>'+
                  '</li>';
         }
       },
+      // Event: Fires when the user deletes a branch or tag
       DeleteEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="delete list-group-item">'+
-               'Deleted '+obj.payload.ref_type+' '+obj.payload.ref+' '+
-               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
+        var id       = obj.id,
+            date     = helpers.date(obj.created_at),
+            repoName = obj.repo.name,
+            refType  = obj.payload.ref_type,
+            ref      = obj.payload.ref;
+
+        return '<li id="'+id+'" class="delete list-group-item">'+
+                 'Deleted '+refType+' '+ref+' '+
+                 'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+date+'</small>'+
                '</li>';
       },
+      // Event: Fires when the user creates a new download
       DownloadEvent: function(obj) {
-        // No longer created
-        return '';
-      },
-      ForkEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="fork list-group-item">'+
-               'Forked <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> '+
-               'to <a href="https://github.com/'+obj.payload.forkee.full_name+'">'+obj.payload.forkee.full_name+'</a> '+
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
+        var id           = obj.id,
+            date         = helpers.date(obj.created_at),
+            repoName     = obj.repo.name,
+            downloadName = obj.payload.download.name,
+            downloadURL  = obj.payload.download.html_url;
+
+        return '<li id="'+id+'" class="download list-group-item">'+
+                 'Created download <a href="'+downloadURL+'">'+downloadName+'</a> '+
+                 'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+date+'</small>'+
                '</li>';
       },
+      // Event: Fires when the user follows another user
+      FollowEvent: function(obj) {
+        var id       = obj.id,
+            date     = helpers.date(obj.created_at),
+            userName = obj.payload.target.login,
+            userURL  = obj.payload.target.html_url;
+
+        return '<li id="'+id+'" class="follow list-group-item">'+
+                 'Started following <a href="'+userURL+'">'+userName+'</a> '+
+                 '<small>'+date+'</small>'+
+               '</li>';
+      },
+      // Event: Fires when the user applies a patch in the Fork Queue
       ForkApplyEvent: function(obj) {
-        // No longer created
-        return '';
-      },
-      GistEvent: function(obj) {
-        var action = obj.payload.action.charAt(0).toUpperCase() + obj.payload.action.slice(1);
-        return '<li id="'+obj.id+'" class="gist list-group-item">' +
-               action+'d gist '+
-               '<a href="'+obj.payload.gist.html_url+'">'+obj.payload.gist.id+'</a> '+
-               '<small>'+this.formatDate(obj.created_at)+'</small>' +
+        var id       = obj.id,
+            date     = helpers.date(obj.created_at),
+            repoName = obj.repo.name;
+
+        return '<li id="'+id+'" class="fork-apply list-group-item">'+
+                 'Applied a patch '+
+                 'to <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+date+'</small>'+
                '</li>';
       },
+      // Event: Fires when the user forks a repository
+      ForkEvent: function(obj) {
+        var id       = obj.id,
+            date     = helpers.date(obj.created_at),
+            repoName = obj.repo.name,
+            forkee   = obj.payload.forkee.full_name;
+
+        return '<li id="'+id+'" class="fork list-group-item">'+
+                 'Forked <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 'to <a href="https://github.com/'+forkee+'">'+forkee+'</a> '+
+                 '<small>'+date+'</small>'+
+               '</li>';
+      },
+      // Event: Fires when the user creates or updates a gist
+      GistEvent: function(obj) {
+        var id       = obj.id,
+            date     = helpers.date(obj.created_at),
+            action   = helpers.capitalize(obj.payload.action)+'d',
+            gistID   = obj.payload.gist.id,
+            gistURL  = obj.payload.gist.html_url;
+
+        return '<li id="'+id+'" class="gist list-group-item">'+
+                 action+' gist <a href="'+gistURL+'">'+gistID+'</a> '+
+                 '<small>'+date+'</small>'+
+               '</li>';
+      },
+      // Event: Fires when a the user creates or updates a wiki page
       GollumEvent: function(obj) {
-        var action = '';
-        var data = '';
+        var id       = obj.id,
+            date     = helpers.date(obj.created_at),
+            repoName = obj.repo.name;
 
-        for (var i=0; i<obj.payload.pages.length; i++) {
-          action = obj.payload.pages[i].action.charAt(0).toUpperCase() + obj.payload.pages[i].action.slice(1);
-          data += action +' wiki page <a href="'+obj.payload.pages[i].html_url+'">'+obj.payload.pages[i].title+'</a> ';
+        return '<li id="'+id+'" class="gollum list-group-item">'+
+                 'Edited the wiki '+
+                 'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+date+'</small>'+
+               '</li>';
+      },
+      // Event: Fires when the user comments on an issue
+      IssueCommentEvent: function(obj) {
+        var id         = obj.id,
+            date       = helpers.date(obj.created_at),
+            repoName   = obj.repo.name,
+            issueType  = helpers.issueType(obj.payload.issue),
+            issueID    = obj.payload.issue.number,
+            commentURL = null;
 
-          if (i>0 && i<obj.payload.pages.length-1) { data += ', ';     }
-          if (i>0 && i>obj.payload.pages.length-2) { data += ', and '; }
+        // A Pull Request is a special type of issue.
+        // All Pull Requests are Issues, but not all Issues are Pull Requests.
+
+        if (issueType === 'pull request') {
+          commentURL = obj.payload.issue.pull_request.html_url+
+                       '#issuecomment-'+obj.payload.comment.id;
+        } else {
+          commentURL = obj.payload.comment.html_url;
         }
 
-        return '<li id="'+obj.id+'" class="gollum list-group-item">'+
-               data +
-               ' at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
+        return '<li id="'+id+'" class="issue-comment list-group-item">'+
+                 'Commented on '+issueType+' <a href="'+commentURL+'">#'+issueID+'</a> '+
+                 'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+date+'</small>'+
                '</li>';
       },
-      IssueCommentEvent: function(obj) {
-        var type = (obj.payload.issue.pull_request ) ? 'pull request' : 'issue';
-        return '<li id="'+obj.id+'" class="issue-comment list-group-item">'+
-               'Commented on '+type+' <a href="'+obj.payload.comment.html_url+'">#'+obj.payload.issue.number+'</a> ' +
-               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
-               '</li>';
-      },
+      // Event: Fires when the user creates, closes, or reopens an issue
       IssuesEvent: function(obj) {
-        var action = obj.payload.action.charAt(0).toUpperCase() + obj.payload.action.slice(1);
-        return '<li id="'+obj.id+'" class="issues list-group-item">'+
-               action+' issue '+
-               '<a href="'+obj.payload.issue.html_url+'">#'+obj.payload.issue.number+'</a> '+
-               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
+        var id       = obj.id,
+            date     = helpers.date(obj.created_at),
+            repoName = obj.repo.name,
+            action   = helpers.capitalize(obj.payload.action),
+            issueID  = obj.payload.issue.number,
+            issueURL = obj.payload.issue.html_url;
+
+        return '<li id="'+id+'" class="issues list-group-item">'+
+                 action+' issue <a href="'+issueURL+'">#'+issueID+'</a> '+
+                 'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+date+'</small>'+
                '</li>';
       },
+      // Event: Fires when the user adds another user to a repository as a collaborator
       MemberEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               obj.type+' '+
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
+        var id       = obj.id,
+            date     = helpers.date(obj.created_at),
+            repoName = obj.repo.name,
+            userName = obj.payload.member.login,
+            userURL  = obj.payload.member.html_url;
+
+        return '<li id="'+id+'" class="member list-group-item">'+
+                 'Added <a href="'+userURL+'">'+userName+'</a> '+
+                 'to <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+helpers.date(obj.created_at)+'</small>'+
                '</li>';
       },
+      // Event: Fires when the user makes a private repository public
       PublicEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="public list-group-item">'+
-               'Open sourced repository <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> '+
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
+        var id       = obj.id,
+            date     = helpers.date(obj.created_at),
+            repoName = obj.repo.name;
+
+        return '<li id="'+id+'" class="public list-group-item">'+
+                 'Open sourced repository <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+date+'</small>'+
                '</li>';
       },
+      // Event: Fires when the user creates, closes, reopens, or synchronizes a pull request
       PullRequestEvent: function(obj) {
-        var action = obj.payload.action.charAt(0).toUpperCase() + obj.payload.action.slice(1);
-        return '<li id="'+obj.id+'" class="pull-request list-group-item">'+
-               action+' pull request <a href="https://github.com/'+obj.repo.name+'/pull/'+obj.payload.number+'">#'+obj.payload.number+'</a> '+
-               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
+        var id            = obj.id,
+            date          = helpers.date(obj.created_at),
+            repoName      = obj.repo.name,
+            action        = helpers.capitalize(obj.payload.action);
+            pullRequestID = obj.payload.number;
+
+        return '<li id="'+id+'" class="pull-request list-group-item">'+
+                 action+' pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
+                 'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+date+'</small>'+
                '</li>';
       },
+      // Event: Fires when the user comments on the unified diff of a pull request
       PullRequestReviewCommentEvent: function(obj) {
-        var num = obj.payload.comment.pull_request_url.substring(obj.payload.comment.pull_request_url.lastIndexOf('/')+1);
-        return '<li id="'+obj.id+'" class="pull-request-review-comment list-group-item">'+
-               'Commented on pull request <a href="'+obj.payload.comment.html_url+'">#'+num+'</a> ' +
-               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
+        var id            = obj.id,
+            date          = helpers.date(obj.created_at),
+            repoName      = obj.repo.name,
+            commentURL    = obj.payload.comment.html_url,
+            pullRequestID = helpers.tail(obj.payload.comment.pull_request_url);
+
+        return '<li id="'+id+'" class="pull-request-review-comment list-group-item">'+
+                 'Commented on pull request <a href="'+commentURL+'">#'+pullRequestID+'</a> '+
+                 'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+date+'</small>'+
                '</li>';
       },
+      // Event: Fires when the user pushes to a branch
       PushEvent: function(obj) {
-        var ref = obj.payload.ref.substring(obj.payload.ref.lastIndexOf('/')+1);
-        var count = (obj.payload.size === 1) ? '1 commit ' : obj.payload.size+' commits ';
-        return '<li id="'+obj.id+'" class="list-group-item">'+
-               'Pushed '+count+
-               'to <a href="https://github.com/'+obj.repo.name+'/tree/'+ref+'">'+ref+'</a> ' +
-               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
+        var id       = obj.id,
+            date     = helpers.date(obj.created_at),
+            repoName = obj.repo.name,
+            count    = (obj.payload.size === 1) ? '1 commit ' : obj.payload.size+' commits ',
+            refTail  = helpers.tail(obj.payload.ref);
+
+        return '<li id="'+id+'" class="push list-group-item">'+
+                 'Pushed '+count+
+                 'to <a href="https://github.com/'+repoName+'/tree/'+refTail+'">'+refTail+'</a> '+
+                 'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+date+'</small>'+
                '</li>';
       },
+      // Event: Fires when the user creates a release
       ReleaseEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="release list-group-item">'+
-               'Created release '+
-               '<a href="'+obj.payload.release.html_url+'">'+obj.payload.release.name+'</a> ' +
-               'at <a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
+        var id          = obj.id,
+            date        = helpers.date(obj.created_at),
+            repoName    = obj.repo.name,
+            releaseName = obj.payload.release.name,
+            releaseURL  = obj.payload.release.html_url;
+
+        return '<li id="'+id+'" class="release list-group-item">'+
+                 'Created release <a href="'+releaseURL+'">'+releaseName+'</a> '+
+                 'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+date+'</small>'+
                '</li>';
       },
+      // Event: Fires when the user stars a repository
       WatchEvent: function(obj) {
-        return '<li id="'+obj.id+'" class="watch list-group-item">'+
-               'Starred repository '+
-               '<a href="https://github.com/'+obj.repo.name+'">'+obj.repo.name+'</a> ' +
-               '<small>'+this.formatDate(obj.created_at)+'</small>'+
+        var id       = obj.id,
+            date     = helpers.date(obj.created_at),
+            repoName = obj.repo.name;
+
+        return '<li id="'+id+'" class="watch list-group-item">'+
+                 'Starred repository <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+                 '<small>'+date+'</small>'+
                '</li>';
+      }
+    };
+
+    var helpers = {
+      // Capitalize the first letter of a string
+      capitalize: function(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      },
+      // Convert date string to more friendly version
+      date: function(str) {
+        var d = new Date(str);
+        return (d.getMonth() + 1) + '-' + (d.getDate()) + '-' + (d.getFullYear());
+      },
+      // Determine if an issue is a Pull Request or just a regular Issue
+      issueType: function(issue) {
+        if (issue.pull_request && issue.pull_request.html_url &&
+            issue.pull_request.diff_url && issue.pull_request.patch_url) {
+          return 'pull request';
+        } else {
+          return 'issue';
+        }
+      },
+      // Get the last piece of a slash separated string (such as an URL or Git ref)
+      tail: function(str) {
+        return str.split("/").pop();
       }
     };
 
@@ -193,7 +331,7 @@
       promise.done(function(data, status, xhr) {
         if (data) {
           var head = container.find('.guaw-head');
-          head.html(html.profile(data));
+          head.html(templates.profile(data));
         }
         if (settings.debug) {
           console.log('Fetch Profile', xhr.status, xhr.statusText);
@@ -229,7 +367,8 @@
           var content = '';
 
           for (var i=0; i<data.length; i++) {
-            content += html[data[i].type](data[i]);
+            // TODO test that templates[data[i].type] exists before calling it
+            content += templates[data[i].type](data[i]);
           }
 
           if (pageNumber === 1) { body.html(''); }
@@ -276,7 +415,7 @@
     };
 
     // Engage!
-    container.append(html.boilerplate());
+    container.append(templates.boilerplate());
     poll();
   };
 
