@@ -27,10 +27,16 @@
             name   = obj.name,
             login  = obj.login;
 
-        return '<a href="https://github.com/'+login+'"><img src="'+avatar+'"></a>'+
-               '<h4><a href="https://github.com/'+login+'">'+name+'</a></h4>'+
-               '<small><a href="https://github.com/'+login+'">'+login+'</a></small>'+
-               '<div class="clearfix"></div>';
+        if (name) {
+          return '<a href="https://github.com/'+login+'"><img src="'+avatar+'"></a>'+
+                 '<h4><a href="https://github.com/'+login+'">'+name+'</a></h4>'+
+                 '<small><a href="https://github.com/'+login+'">'+login+'</a></small>'+
+                 '<div class="clearfix"></div>';
+        } else {
+          return '<a href="https://github.com/'+login+'"><img src="'+avatar+'"></a>'+
+                 '<h4><a href="https://github.com/'+login+'">'+login+'</a></h4>'+
+                 '<div class="clearfix"></div>';
+        }
       },
       // Event: Fires when the user comments on a commit
       CommitCommentEvent: function(obj) {
