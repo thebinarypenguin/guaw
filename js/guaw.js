@@ -16,7 +16,9 @@
         return '<div class="guaw">'+
                  '<div class="guaw-head"></div>'+
                  '<ul class="guaw-body"></ul>'+
-                 '<div class="guaw-foot">Powered by GUAW</div>'+
+                 '<div class="guaw-foot">'+
+                   '<a href="http://thebinarypenguin.github.io/guaw/">Powered by GUAW</a>'+
+                 '</div>'+
                '</div>';
       },
       // The user info header
