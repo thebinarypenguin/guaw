@@ -27,8 +27,10 @@
             name   = obj.name,
             login  = obj.login;
 
-        return '<img src="'+avatar+'">'+
-               '<h4>'+name+'<br><small>'+login+'</small></h4>';
+        return '<a href="https://github.com/'+login+'"><img src="'+avatar+'"></a>'+
+               '<h4><a href="https://github.com/'+login+'">'+name+'</a></h4>'+
+               '<small><a href="https://github.com/'+login+'">'+login+'</a></small>'+
+               '<div class="clearfix"></div>';
       },
       // Event: Fires when the user comments on a commit
       CommitCommentEvent: function(obj) {

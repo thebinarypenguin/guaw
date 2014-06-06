@@ -22,6 +22,16 @@
   padding: 0;
 }
 
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: " ";
+}
+
+.clearfix:after {
+  clear: both;
+}
+
 .guaw {
   margin-bottom: 20px;
   border: 1px solid #d5d5d5;
@@ -76,16 +86,15 @@
   float: left!important;
 }
 
-.guaw-head h4 {
+.guaw-head h4 a {
   color: #555555;
   line-height: 1;
   font-size: 24px;
   font-weight: 500;
 }
 
-.guaw-head small {
+.guaw-head small a {
   color: #999;
-  line-height: 1;
   font-size: 18px;
   font-weight: 400;
 }
