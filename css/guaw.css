@@ -38,7 +38,6 @@
 
 .guaw a {
   background: transparent;
-  color: #4183c4;
   text-decoration: none;
 }
 
@@ -48,16 +47,12 @@
 
 .guaw a:hover {
   outline: 0;
-  color: #4183c4;
-  text-decoration: underline;
 }
 
 .guaw a:focus {
   outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
-  color: #4183c4;
-  text-decoration: underline;
 }
 
 .guaw-head {
@@ -100,6 +95,16 @@
   overflow-y: scroll;
 }
 
+.guaw-body a {
+  color: #4183c4;
+}
+
+.guaw-body a:hover,
+.guaw-body a:focus {
+  color: #4183c4;
+  text-decoration: underline;
+}
+
 .guaw-body li {
   position: relative;
   display: block;
@@ -132,8 +137,18 @@
   background-repeat: repeat-x;
 
   color: #999999;
+  text-shadow: 0 1px 0 #fff;
   line-height: 1;
   font-size: 12px;
   font-weight: 400;
   text-align: right;
+}
+
+.guaw-foot a {
+  color: #999999;
+}
+
+.guaw-foot a:hover,
+.guaw-foot a:focus {
+  color: #777777;
 }
