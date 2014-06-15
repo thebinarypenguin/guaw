@@ -2,7 +2,9 @@
 
   var createWidget = function(element, options) {
 
-    var container = $(element);
+    var container  = $(element),
+        widgetHead = null,
+        widgetBody = null;
 
     var settings = $.extend({
       username: 'octocat',
@@ -340,8 +342,7 @@
       // Success, if new data update DOM
       promise.done(function(data, status, xhr) {
         if (data) {
-          var head = container.find('.guaw-head');
-          head.html(templates.profile(data));
+          widgetHead.html(templates.profile(data));
         }
         if (settings.debug) {
           console.log('Fetch Profile', xhr.status, xhr.statusText);
@@ -373,7 +374,6 @@
       // Success, if new data update DOM
       promise.done(function(data, status, xhr) {
         if (data) {
-          var body    = container.find('.guaw-body');
           var content = '';
 
           for (var i=0; i<data.length; i++) {
@@ -382,9 +382,9 @@
             }
           }
 
-          if (pageNumber === 1) { body.html(''); }
+          if (pageNumber === 1) { widgetBody.html(''); }
 
-          body.append(content);
+          widgetBody.append(content);
         }
         if (settings.debug) {
           console.log('Fetch Activity Page '+pageNumber, xhr.status, xhr.statusText);
@@ -427,6 +427,10 @@
 
     // Engage!
     container.append(templates.boilerplate());
+
+    widgetHead = container.find('.guaw-head');
+    widgetBody = container.find('.guaw-body');
+
     poll();
   };
 
