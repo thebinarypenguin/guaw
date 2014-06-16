@@ -330,7 +330,7 @@
     };
 
     /**
-     * Make sure realTimeout is never less minTimeout
+     * Make sure realTimeout is never less than minTimeout
      * (minTimeout comes from the X-Poll-Interval response header)
      */
     var setRealTimeout = function(minTimeout) {
@@ -346,8 +346,10 @@
      * Returns a promise
      */
     var fetchProfile = function() {
+      var url = 'https://api.github.com/users/'+settings.username;
+
       var promise = $.ajax({
-        url: 'https://api.github.com/users/'+settings.username,
+        url: url,
         headers: {'Accept': 'application/vnd.github.v3+json'},
         dataType: 'json',
         ifModified: true
@@ -355,18 +357,19 @@
 
       // Success, if new data update DOM
       promise.done(function(data, status, xhr) {
+        if (settings.debug) {
+          console.log('Fetch '+url+' ('+xhr.status+' '+xhr.statusText+')');
+        }
+
         if (data) {
           widgetHead.html(templates.profile(data));
-        }
-        if (settings.debug) {
-          console.log('Fetch Profile', xhr.status, xhr.statusText);
         }
       });
 
       // Failure, ...
       promise.fail(function(xhr, status, error) {
         if (settings.debug) {
-          console.log('Fetch Profile', xhr.status, xhr.statusText);
+          console.log('Fetch '+url+' ('+xhr.status+' '+xhr.statusText+')');
         }
       });
 
@@ -378,8 +381,10 @@
      * Returns a promise
      */
     var fetchActivityPage = function(pageNumber) {
+      var url = 'https://api.github.com/users/'+settings.username+'/events/public?page='+pageNumber;
+
       var promise = $.ajax({
-        url: 'https://api.github.com/users/'+settings.username+'/events/public?page='+pageNumber,
+        url: url,
         headers: {'Accept': 'application/vnd.github.v3+json'},
         dataType: 'json',
         ifModified: true
@@ -388,6 +393,10 @@
       // Success, if new data update DOM
       promise.done(function(data, status, xhr) {
         setRealTimeout(xhr.getResponseHeader('X-Poll-Interval'));
+
+        if (settings.debug) {
+          console.log('Fetch '+url+' ('+xhr.status+' '+xhr.statusText+')');
+        }
 
         if (data) {
           var content = '';
@@ -402,9 +411,6 @@
 
           widgetBody.append(content);
         }
-        if (settings.debug) {
-          console.log('Fetch Activity Page '+pageNumber, xhr.status, xhr.statusText);
-        }
       });
 
       // Failure, ...
@@ -412,7 +418,7 @@
         setRealTimeout(xhr.getResponseHeader('X-Poll-Interval'));
 
         if (settings.debug) {
-          console.log('Fetch Activity Page '+pageNumber, xhr.status, xhr.statusText);
+          console.log('Fetch '+url+' ('+xhr.status+' '+xhr.statusText+')');
         }
       });
 
@@ -441,7 +447,6 @@
         .always(function() { setTimeout(poll, realTimeout*1000); });
     };
 
-    // Engage!
     container.append(templates.boilerplate());
 
     widgetHead = container.find('.guaw-head');
