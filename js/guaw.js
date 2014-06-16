@@ -12,6 +12,8 @@
       debug: false
     }, options);
 
+    var realTimeout = settings.timeout;
+
     var templates = {
       // The widget skeleton
       boilerplate: function() {
@@ -328,6 +330,18 @@
     };
 
     /**
+     * Make sure realTimeout is never less minTimeout
+     * (minTimeout comes from the X-Poll-Interval response header)
+     */
+    var setRealTimeout = function(minTimeout) {
+      realTimeout = settings.timeout;
+
+      if (minTimeout > realTimeout) {
+        realTimeout = minTimeout;
+      }
+    };
+
+    /**
      * Get user profile and if successful update DOM
      * Returns a promise
      */
@@ -373,6 +387,8 @@
 
       // Success, if new data update DOM
       promise.done(function(data, status, xhr) {
+        setRealTimeout(xhr.getResponseHeader('X-Poll-Interval'));
+
         if (data) {
           var content = '';
 
@@ -393,6 +409,8 @@
 
       // Failure, ...
       promise.fail(function(xhr, status, error) {
+        setRealTimeout(xhr.getResponseHeader('X-Poll-Interval'));
+
         if (settings.debug) {
           console.log('Fetch Activity Page '+pageNumber, xhr.status, xhr.statusText);
         }
@@ -420,7 +438,7 @@
         .then(function() { return fetchActivityPage(8);  })
         .then(function() { return fetchActivityPage(9);  })
         .then(function() { return fetchActivityPage(10); })
-        .always(function() { setTimeout(poll, settings.timeout*1000); });
+        .always(function() { setTimeout(poll, realTimeout*1000); });
     };
 
     // Engage!
