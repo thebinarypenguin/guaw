@@ -409,20 +409,18 @@
 
       // Use a promise chain to keep our AJAX ducks in a row
 
-      var chain = fetchProfile();
-
-      chain.then(function() { return fetchActivityPage(1);  });
-      chain.then(function() { return fetchActivityPage(2);  });
-      chain.then(function() { return fetchActivityPage(3);  });
-      chain.then(function() { return fetchActivityPage(4);  });
-      chain.then(function() { return fetchActivityPage(5);  });
-      chain.then(function() { return fetchActivityPage(6);  });
-      chain.then(function() { return fetchActivityPage(7);  });
-      chain.then(function() { return fetchActivityPage(8);  });
-      chain.then(function() { return fetchActivityPage(9);  });
-      chain.then(function() { return fetchActivityPage(10); });
-
-      chain.always(function() { setTimeout(poll, settings.timeout*1000); });
+      fetchProfile()
+        .then(function() { return fetchActivityPage(1);  })
+        .then(function() { return fetchActivityPage(2);  })
+        .then(function() { return fetchActivityPage(3);  })
+        .then(function() { return fetchActivityPage(4);  })
+        .then(function() { return fetchActivityPage(5);  })
+        .then(function() { return fetchActivityPage(6);  })
+        .then(function() { return fetchActivityPage(7);  })
+        .then(function() { return fetchActivityPage(8);  })
+        .then(function() { return fetchActivityPage(9);  })
+        .then(function() { return fetchActivityPage(10); })
+        .always(function() { setTimeout(poll, settings.timeout*1000); });
     };
 
     // Engage!
