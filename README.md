@@ -9,6 +9,7 @@ A jQuery plugin for displaying GitHub user activity in a handsome little widget
 - Requires jQuery 1.8 or later
 - Uses the GitHub Events API v3
 - Displays all available activity (not just the first page)
+- Rate-limits itself by respecting the X-Poll-Interval response header
 
 # Usage
 
