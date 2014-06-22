@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GUAW Test Page</title>
+    <link href="../src/css/guaw.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <div id="widget-container"></div>
+
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="../src/js/guaw.js"></script>
+    <script>
+      $(function(){
+        $('#widget-container').guaw({
+          username: 'thebinarypenguin',
+          timeout: 180,
+          debug: true
+        });
+      });
+    </script>
+  </body>
+</html>
