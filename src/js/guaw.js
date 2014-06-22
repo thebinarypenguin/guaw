@@ -447,12 +447,24 @@
         .always(function() { setTimeout(poll, realTimeout*1000); });
     };
 
-    container.append(templates.boilerplate());
+    /**
+     * Initialize the widget and start the polling process
+     */
+    var init = function() {
+      container.append(templates.boilerplate());
 
-    widgetHead = container.find('.guaw-head');
-    widgetBody = container.find('.guaw-body');
+      widgetHead = container.find('.guaw-head');
+      widgetBody = container.find('.guaw-body');
 
-    poll();
+      if (settings.debug) {
+        console.log('Settings: ', settings);
+      }
+
+      poll();
+    };
+
+    // Go!
+    init();
   };
 
   /* Create a jQuery plugin */
