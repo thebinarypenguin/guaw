@@ -17,15 +17,15 @@ A jQuery plugin for displaying GitHub user activity in a handsome little widget
 <html>
   <head>
     <!-- Include the plugin stylesheet -->
-    <link href="css/guaw.css" rel="stylesheet">
+    <link href="css/jquery.guaw.min.css" rel="stylesheet">
   </head>
   <body>
     <!-- Create a container -->
     <div id="widget-container"></div>
 
     <!-- Include jQuery and the plugin -->
-    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="js/guaw.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="js/jquery.guaw.min.js"></script>
     <script>
       $(function(){
 
