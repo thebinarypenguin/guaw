@@ -1,0 +1,13 @@
+{
+  "name": "guaw-dev",
+  "version": "0.0.0-ignore",
+  "description": "Used to install the development tools for the GUAW jQuery plugin",
+  "private": true,
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-cssmin": "^0.10.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-uglify": "^0.5.0"
+  }
+}
