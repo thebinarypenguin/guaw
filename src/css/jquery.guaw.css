@@ -1,3 +1,10 @@
+@import url("octicons/octicons.css");
+
+.guaw .octicon {
+  width: 16px;
+  text-align: center;
+}
+
 .guaw * {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
