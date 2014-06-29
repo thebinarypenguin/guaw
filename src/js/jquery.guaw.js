@@ -66,10 +66,10 @@
         '<div class="clearfix"></div>';
       },
       commentOnCommit: function(data) {
-        var id         = data.id;
-            date       = helpers.date(data.created_at);
-            repoName   = data.repo.name;
-            commentURL = data.payload.comment.html_url;
+        var id         = data.id,
+            date       = helpers.date(data.created_at),
+            repoName   = data.repo.name,
+            commentURL = data.payload.comment.html_url,
             commitID   = data.payload.comment.commit_id.substring(0,7);
 
         return ''+
@@ -80,9 +80,9 @@
         '</li>';
       },
       createRepository: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            repoName = data.repo.name;
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            repoName = data.repo.name,
             ref      = data.payload.ref;
 
         return ''+
@@ -92,9 +92,9 @@
         '</li>';
       },
       createBranch: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            repoName = data.repo.name;
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            repoName = data.repo.name,
             ref      = data.payload.ref;
 
         return ''+
@@ -105,9 +105,9 @@
         '</li>';
       },
       createTag: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            repoName = data.repo.name;
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            repoName = data.repo.name,
             ref      = data.payload.ref;
 
         return ''+
@@ -118,9 +118,9 @@
         '</li>';
       },
       deleteBranch: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            repoName = data.repo.name;
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            repoName = data.repo.name,
             ref      = data.payload.ref;
 
         return ''+
@@ -131,9 +131,9 @@
         '</li>';
       },
       deleteTag: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            repoName = data.repo.name;
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            repoName = data.repo.name,
             ref      = data.payload.ref;
 
         return ''+
@@ -144,10 +144,10 @@
         '</li>';
       },
       createDownload: function(data) {
-        var id           = data.id;
-            date         = helpers.date(data.created_at);
-            repoName     = data.repo.name;
-            downloadName = data.payload.download.name;
+        var id           = data.id,
+            date         = helpers.date(data.created_at),
+            repoName     = data.repo.name,
+            downloadName = data.payload.download.name,
             downloadURL  = data.payload.download.html_url;
 
         return ''+
@@ -158,9 +158,9 @@
         '</li>';
       },
       followUser: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            userName = data.payload.target.login;
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            userName = data.payload.target.login,
             userURL  = data.payload.target.html_url;
 
         return ''+
@@ -170,8 +170,8 @@
         '</li>';
       },
       applyPatch: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
             repoName = data.repo.name;
 
         return ''+
@@ -182,9 +182,9 @@
         '</li>';
       },
       forkRepository: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            repoName = data.repo.name;
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            repoName = data.repo.name,
             forkee   = data.payload.forkee.full_name;
 
         return ''+
@@ -195,9 +195,9 @@
         '</li>';
       },
       createGist: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            gistID   = data.payload.gist.id;
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            gistID   = data.payload.gist.id,
             gistURL  = data.payload.gist.html_url;
 
         return ''+
@@ -207,9 +207,9 @@
         '</li>';
       },
       updateGist: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            gistID   = data.payload.gist.id;
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            gistID   = data.payload.gist.id,
             gistURL  = data.payload.gist.html_url;
 
         return ''+
@@ -219,8 +219,8 @@
         '</li>';
       },
       editWiki: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
             repoName = data.repo.name;
 
         return ''+
@@ -231,10 +231,10 @@
         '</li>';
       },
       commentOnIssue: function(data) {
-        var id         = data.id;
-            date       = helpers.date(data.created_at);
-            repoName   = data.repo.name;
-            issueID    = data.payload.issue.number;
+        var id         = data.id,
+            date       = helpers.date(data.created_at),
+            repoName   = data.repo.name,
+            issueID    = data.payload.issue.number,
             commentURL = data.payload.comment.html_url;
 
         return ''+
@@ -245,10 +245,10 @@
         '</li>';
       },
       commentOnPullRequest: function(data) {
-        var id         = data.id;
-            date       = helpers.date(data.created_at);
-            repoName   = data.repo.name;
-            issueID    = data.payload.issue.number;
+        var id         = data.id,
+            date       = helpers.date(data.created_at),
+            repoName   = data.repo.name,
+            issueID    = data.payload.issue.number,
             commentURL = data.payload.issue.pull_request.html_url+'#issuecomment-'+data.payload.comment.id;
 
         return ''+
@@ -259,10 +259,10 @@
         '</li>';
       },
       openIssue: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            repoName = data.repo.name;
-            issueID  = data.payload.issue.number;
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            repoName = data.repo.name,
+            issueID  = data.payload.issue.number,
             issueURL = data.payload.issue.html_url;
 
         return ''+
@@ -273,10 +273,10 @@
         '</li>';
       },
       closeIssue: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            repoName = data.repo.name;
-            issueID  = data.payload.issue.number;
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            repoName = data.repo.name,
+            issueID  = data.payload.issue.number,
             issueURL = data.payload.issue.html_url;
 
         return ''+
@@ -287,10 +287,10 @@
         '</li>';
       },
       reopenIssue: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            repoName = data.repo.name;
-            issueID  = data.payload.issue.number;
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            repoName = data.repo.name,
+            issueID  = data.payload.issue.number,
             issueURL = data.payload.issue.html_url;
 
         return ''+
@@ -301,10 +301,10 @@
         '</li>';
       },
       addUserToRepository: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            repoName = data.repo.name;
-            userName = data.payload.member.login;
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            repoName = data.repo.name,
+            userName = data.payload.member.login,
             userURL  = data.payload.member.html_url;
 
         return ''+
@@ -315,8 +315,8 @@
         '</li>';
       },
       openSourceRepository: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
             repoName = data.repo.name;
 
         return ''+
@@ -326,9 +326,9 @@
         '</li>';
       },
       openPullRequest: function(data) {
-        var id            = data.id;
-            date          = helpers.date(data.created_at);
-            repoName      = data.repo.name;
+        var id            = data.id,
+            date          = helpers.date(data.created_at),
+            repoName      = data.repo.name,
             pullRequestID = data.payload.number;
 
         return ''+
@@ -339,9 +339,9 @@
         '</li>';
       },
       closePullRequest: function(data) {
-        var id            = data.id;
-            date          = helpers.date(data.created_at);
-            repoName      = data.repo.name;
+        var id            = data.id,
+            date          = helpers.date(data.created_at),
+            repoName      = data.repo.name,
             pullRequestID = data.payload.number;
 
         return ''+
@@ -352,9 +352,9 @@
         '</li>';
       },
       reopenPullRequest: function(data) {
-        var id            = data.id;
-            date          = helpers.date(data.created_at);
-            repoName      = data.repo.name;
+        var id            = data.id,
+            date          = helpers.date(data.created_at),
+            repoName      = data.repo.name,
             pullRequestID = data.payload.number;
 
         return ''+
@@ -365,9 +365,9 @@
         '</li>';
       },
       synchronizePullRequest: function(data) {
-        var id            = data.id;
-            date          = helpers.date(data.created_at);
-            repoName      = data.repo.name;
+        var id            = data.id,
+            date          = helpers.date(data.created_at),
+            repoName      = data.repo.name,
             pullRequestID = data.payload.number;
 
         return ''+
@@ -378,10 +378,10 @@
         '</li>';
       },
       commentOnPullRequestDiff: function(data) {
-        var id            = data.id;
-            date          = helpers.date(data.created_at);
-            repoName      = data.repo.name;
-            commentURL    = data.payload.comment.html_url;
+        var id            = data.id,
+            date          = helpers.date(data.created_at),
+            repoName      = data.repo.name,
+            commentURL    = data.payload.comment.html_url,
             pullRequestID = helpers.tail(data.payload.comment.pull_request_url);
 
         return ''+
@@ -392,10 +392,10 @@
         '</li>';
       },
       pushToBranch: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
-            repoName = data.repo.name;
-            count    = (data.payload.size === 1) ? '1 commit ' : data.payload.size+' commits ';
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
+            repoName = data.repo.name,
+            count    = (data.payload.size === 1) ? '1 commit ' : data.payload.size+' commits ',
             refTail  = helpers.tail(data.payload.ref);
 
         return ''+
@@ -407,10 +407,10 @@
         '</li>';
       },
       createRelease: function(data) {
-        var id          = data.id;
-            date        = helpers.date(data.created_at);
-            repoName    = data.repo.name;
-            releaseName = data.payload.release.name;
+        var id          = data.id,
+            date        = helpers.date(data.created_at),
+            repoName    = data.repo.name,
+            releaseName = data.payload.release.name,
             releaseURL  = data.payload.release.html_url;
 
         return ''+
@@ -421,8 +421,8 @@
         '</li>';
       },
       starRepository: function(data) {
-        var id       = data.id;
-            date     = helpers.date(data.created_at);
+        var id       = data.id,
+            date     = helpers.date(data.created_at),
             repoName = data.repo.name;
 
         return ''+
