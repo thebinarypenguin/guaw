@@ -38,6 +38,14 @@ module.exports = function(grunt) {
         src: 'src/css/jquery.<%= pkg.name %>.css',
         dest: 'dist/css/jquery.<%= pkg.name %>.min.css'
       },
+    },
+    copy: {
+      octicons: {
+        expand: true,
+        cwd: 'src/css/octicons/',
+        src: '*',
+        dest: 'dist/css/octicons/',
+      },
     }
   });
 
@@ -46,7 +54,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'clean', 'uglify', 'cssmin']);
+  grunt.registerTask('default', ['jshint', 'clean', 'uglify', 'cssmin', 'copy']);
 };
