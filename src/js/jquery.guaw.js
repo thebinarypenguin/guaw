@@ -1,5 +1,7 @@
 ;(function($, window, document, undefined) {
 
+  'use strict';
+
   var defaults = {
     username: 'octocat',
     timeout: 300,
@@ -231,7 +233,7 @@
       var id            = obj.id,
           date          = helpers.date(obj.created_at),
           repoName      = obj.repo.name,
-          action        = helpers.capitalize(obj.payload.action);
+          action        = helpers.capitalize(obj.payload.action),
           pullRequestID = obj.payload.number;
 
       return '<li id="'+id+'" class="pull-request list-group-item">'+
@@ -389,6 +391,10 @@
         }
 
         if (data) {
+          if (this.settings.debug) {
+            console.log(data);
+          }
+
           this.widgetHead.html(templates.profile(data));
         }
       });
@@ -427,6 +433,10 @@
         }
 
         if (data) {
+          if (this.settings.debug) {
+            console.log(data);
+          }
+
           var content = '';
 
           for (var i=0; i<data.length; i++) {
@@ -458,10 +468,10 @@
      * (minTimeout comes from the X-Poll-Interval response header)
      */
     setRealTimeout: function(minTimeout) {
-      realTimeout = this.settings.timeout;
+      this.realTimeout = this.settings.timeout;
 
-      if (minTimeout > realTimeout) {
-        realTimeout = minTimeout;
+      if (minTimeout > this.realTimeout) {
+        this.realTimeout = minTimeout;
       }
     }
   });
