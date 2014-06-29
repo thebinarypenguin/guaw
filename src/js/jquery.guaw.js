@@ -8,320 +8,594 @@
     debug: false
   };
 
-  var templates = {
-    // The widget skeleton
-    boilerplate: function() {
-      return '<div class="guaw">'+
-               '<div class="guaw-head"></div>'+
-               '<ul class="guaw-body"></ul>'+
-               '<div class="guaw-foot">'+
-                 '<a href="http://thebinarypenguin.github.io/guaw/">Powered by GUAW</a>'+
-               '</div>'+
-             '</div>';
-    },
-    // The user info header
-    profile: function(obj) {
-      var avatar = obj.avatar_url,
-          name   = obj.name,
-          login  = obj.login;
-
-      if (name) {
-        return '<a href="https://github.com/'+login+'"><img src="'+avatar+'"></a>'+
-               '<h4><a href="https://github.com/'+login+'">'+name+'</a></h4>'+
-               '<small><a href="https://github.com/'+login+'">'+login+'</a></small>'+
-               '<div class="clearfix"></div>';
-      } else {
-        return '<a href="https://github.com/'+login+'"><img src="'+avatar+'"></a>'+
-               '<h4><a href="https://github.com/'+login+'">'+login+'</a></h4>'+
-               '<div class="clearfix"></div>';
+  var views = (function() {
+    var helpers = {
+      // Capitalize the first letter of a string
+      capitalize: function(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      },
+      // Convert date string to more friendly version
+      date: function(str) {
+        var d = new Date(str);
+        return (d.getMonth() + 1) + '-' + (d.getDate()) + '-' + (d.getFullYear());
+      },
+      // Determine if an issue is a Pull Request or just a regular Issue
+      issueType: function(issue) {
+        if (issue.pull_request && issue.pull_request.html_url &&
+            issue.pull_request.diff_url && issue.pull_request.patch_url) {
+          return 'pull request';
+        } else {
+          return 'issue';
+        }
+      },
+      // Get the last piece of a slash separated string (such as an URL or Git ref)
+      tail: function(str) {
+        return str.split("/").pop();
       }
-    },
-    // Event: Fires when the user comments on a commit
-    CommitCommentEvent: function(obj) {
-      var id         = obj.id,
-          date       = helpers.date(obj.created_at),
-          repoName   = obj.repo.name,
-          commentURL = obj.payload.comment.html_url,
-          commitID   = obj.payload.comment.commit_id.substring(0,7);
+    };
 
-      return '<li id="'+id+'" class="commit-comment list-group-item">'+
-               'Commented on commit <a href="'+commentURL+'">'+commitID+'</a> '+
-               'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user creates a repository, branch, or tag
-    CreateEvent: function(obj) {
-      var id       = obj.id,
-          date     = helpers.date(obj.created_at),
-          repoName = obj.repo.name,
-          refType  = obj.payload.ref_type,
-          ref      = obj.payload.ref;
+    var templates = {
+      boilerplate: function() {
+        return ''+
+        '<div class="guaw">'+
+          '<div class="guaw-head"></div>'+
+          '<ul class="guaw-body"></ul>'+
+          '<div class="guaw-foot">'+
+            '<a href="http://thebinarypenguin.github.io/guaw/">Powered by GUAW</a>'+
+          '</div>'+
+        '</div>';
+      },
+      profileWithName: function(data) {
+        var avatar = data.avatar_url,
+            name   = data.name,
+            login  = data.login;
 
-      if (refType === 'repository') {
-        return '<li id="'+id+'" class="create list-group-item">'+
-                 'Created '+refType+' <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-                 '<small>'+helpers.date(obj.created_at)+'</small>'+
-               '</li>';
+        return ''+
+        '<a href="https://github.com/'+login+'"><img src="'+avatar+'"></a>'+
+        '<h4><a href="https://github.com/'+login+'">'+name+'</a></h4>'+
+        '<small><a href="https://github.com/'+login+'">'+login+'</a></small>'+
+        '<div class="clearfix"></div>';
+      },
+      profileWithoutName: function(data) {
+        var avatar = data.avatar_url,
+            login  = data.login;
+
+        return ''+
+        '<a href="https://github.com/'+login+'"><img src="'+avatar+'"></a>'+
+        '<h4><a href="https://github.com/'+login+'">'+login+'</a></h4>'+
+        '<div class="clearfix"></div>';
+      },
+      commentOnCommit: function(data) {
+        var id         = data.id;
+            date       = helpers.date(data.created_at);
+            repoName   = data.repo.name;
+            commentURL = data.payload.comment.html_url;
+            commitID   = data.payload.comment.commit_id.substring(0,7);
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Commented on commit <a href="'+commentURL+'">'+commitID+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      createRepository: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+            ref      = data.payload.ref;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Created repository <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      createBranch: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+            ref      = data.payload.ref;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Created branch <a href="https://github.com/'+repoName+'/tree/'+ref+'">'+ref+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      createTag: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+            ref      = data.payload.ref;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Created tag <a href="https://github.com/'+repoName+'/tree/'+ref+'">'+ref+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      deleteBranch: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+            ref      = data.payload.ref;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Deleted branch '+ref+' '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      deleteTag: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+            ref      = data.payload.ref;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Deleted tag '+ref+' '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      createDownload: function(data) {
+        var id           = data.id;
+            date         = helpers.date(data.created_at);
+            repoName     = data.repo.name;
+            downloadName = data.payload.download.name;
+            downloadURL  = data.payload.download.html_url;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Created download <a href="'+downloadURL+'">'+downloadName+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      followUser: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            userName = data.payload.target.login;
+            userURL  = data.payload.target.html_url;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Started following <a href="'+userURL+'">'+userName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      applyPatch: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Applied a patch '+
+          'to <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      forkRepository: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+            forkee   = data.payload.forkee.full_name;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Forked <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          'to <a href="https://github.com/'+forkee+'">'+forkee+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      createGist: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            gistID   = data.payload.gist.id;
+            gistURL  = data.payload.gist.html_url;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Created gist <a href="'+gistURL+'">'+gistID+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      updateGist: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            gistID   = data.payload.gist.id;
+            gistURL  = data.payload.gist.html_url;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Updated gist <a href="'+gistURL+'">'+gistID+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      editWiki: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Edited the wiki '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      commentOnIssue: function(data) {
+        var id         = data.id;
+            date       = helpers.date(data.created_at);
+            repoName   = data.repo.name;
+            issueID    = data.payload.issue.number;
+            commentURL = data.payload.comment.html_url;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Commented on issue <a href="'+commentURL+'">#'+issueID+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      commentOnPullRequest: function(data) {
+        var id         = data.id;
+            date       = helpers.date(data.created_at);
+            repoName   = data.repo.name;
+            issueID    = data.payload.issue.number;
+            commentURL = data.payload.issue.pull_request.html_url+'#issuecomment-'+data.payload.comment.id;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Commented on pull request <a href="'+commentURL+'">#'+issueID+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      openIssue: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+            issueID  = data.payload.issue.number;
+            issueURL = data.payload.issue.html_url;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Opened issue <a href="'+issueURL+'">#'+issueID+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      closeIssue: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+            issueID  = data.payload.issue.number;
+            issueURL = data.payload.issue.html_url;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Closed issue <a href="'+issueURL+'">#'+issueID+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      reopenIssue: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+            issueID  = data.payload.issue.number;
+            issueURL = data.payload.issue.html_url;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Reopened issue <a href="'+issueURL+'">#'+issueID+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      addUserToRepository: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+            userName = data.payload.member.login;
+            userURL  = data.payload.member.html_url;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Added <a href="'+userURL+'">'+userName+'</a> '+
+          'to <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      openSourceRepository: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Open sourced repository <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      openPullRequest: function(data) {
+        var id            = data.id;
+            date          = helpers.date(data.created_at);
+            repoName      = data.repo.name;
+            pullRequestID = data.payload.number;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Opened pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      closePullRequest: function(data) {
+        var id            = data.id;
+            date          = helpers.date(data.created_at);
+            repoName      = data.repo.name;
+            pullRequestID = data.payload.number;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Closed pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      reopenPullRequest: function(data) {
+        var id            = data.id;
+            date          = helpers.date(data.created_at);
+            repoName      = data.repo.name;
+            pullRequestID = data.payload.number;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Reopened pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      synchronizePullRequest: function(data) {
+        var id            = data.id;
+            date          = helpers.date(data.created_at);
+            repoName      = data.repo.name;
+            pullRequestID = data.payload.number;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Synchronized pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      commentOnPullRequestDiff: function(data) {
+        var id            = data.id;
+            date          = helpers.date(data.created_at);
+            repoName      = data.repo.name;
+            commentURL    = data.payload.comment.html_url;
+            pullRequestID = helpers.tail(data.payload.comment.pull_request_url);
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Commented on pull request <a href="'+commentURL+'">#'+pullRequestID+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      pushToBranch: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+            count    = (data.payload.size === 1) ? '1 commit ' : data.payload.size+' commits ';
+            refTail  = helpers.tail(data.payload.ref);
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Pushed '+count+
+          'to <a href="https://github.com/'+repoName+'/tree/'+refTail+'">'+refTail+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      createRelease: function(data) {
+        var id          = data.id;
+            date        = helpers.date(data.created_at);
+            repoName    = data.repo.name;
+            releaseName = data.payload.release.name;
+            releaseURL  = data.payload.release.html_url;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Created release <a href="'+releaseURL+'">'+releaseName+'</a> '+
+          'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      },
+      starRepository: function(data) {
+        var id       = data.id;
+            date     = helpers.date(data.created_at);
+            repoName = data.repo.name;
+
+        return ''+
+        '<li id="'+id+'" class="list-group-item">'+
+          'Starred repository <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
+          '<small>'+date+'</small>'+
+        '</li>';
+      }
+    };
+
+    var render = function(view, data) {
+
+      // Create widget skeleton
+      if (view === 'boilerplate') {
+        return templates.boilerplate();
       }
 
-      if (refType === 'branch' || refType === 'tag') {
-        return '<li id="'+id+'" class="create list-group-item">'+
-                 'Created '+refType+' <a href="https://github.com/'+repoName+'/tree/'+ref+'">'+ref+'</a> '+
-                 'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-                 '<small>'+date+'</small>'+
-               '</li>';
-      }
-    },
-    // Event: Fires when the user deletes a branch or tag
-    DeleteEvent: function(obj) {
-      var id       = obj.id,
-          date     = helpers.date(obj.created_at),
-          repoName = obj.repo.name,
-          refType  = obj.payload.ref_type,
-          ref      = obj.payload.ref;
-
-      return '<li id="'+id+'" class="delete list-group-item">'+
-               'Deleted '+refType+' '+ref+' '+
-               'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user creates a new download
-    DownloadEvent: function(obj) {
-      var id           = obj.id,
-          date         = helpers.date(obj.created_at),
-          repoName     = obj.repo.name,
-          downloadName = obj.payload.download.name,
-          downloadURL  = obj.payload.download.html_url;
-
-      return '<li id="'+id+'" class="download list-group-item">'+
-               'Created download <a href="'+downloadURL+'">'+downloadName+'</a> '+
-               'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user follows another user
-    FollowEvent: function(obj) {
-      var id       = obj.id,
-          date     = helpers.date(obj.created_at),
-          userName = obj.payload.target.login,
-          userURL  = obj.payload.target.html_url;
-
-      return '<li id="'+id+'" class="follow list-group-item">'+
-               'Started following <a href="'+userURL+'">'+userName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user applies a patch in the Fork Queue
-    ForkApplyEvent: function(obj) {
-      var id       = obj.id,
-          date     = helpers.date(obj.created_at),
-          repoName = obj.repo.name;
-
-      return '<li id="'+id+'" class="fork-apply list-group-item">'+
-               'Applied a patch '+
-               'to <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user forks a repository
-    ForkEvent: function(obj) {
-      var id       = obj.id,
-          date     = helpers.date(obj.created_at),
-          repoName = obj.repo.name,
-          forkee   = obj.payload.forkee.full_name;
-
-      return '<li id="'+id+'" class="fork list-group-item">'+
-               'Forked <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               'to <a href="https://github.com/'+forkee+'">'+forkee+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user creates or updates a gist
-    GistEvent: function(obj) {
-      var id       = obj.id,
-          date     = helpers.date(obj.created_at),
-          action   = helpers.capitalize(obj.payload.action)+'d',
-          gistID   = obj.payload.gist.id,
-          gistURL  = obj.payload.gist.html_url;
-
-      return '<li id="'+id+'" class="gist list-group-item">'+
-               action+' gist <a href="'+gistURL+'">'+gistID+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when a the user creates or updates a wiki page
-    GollumEvent: function(obj) {
-      var id       = obj.id,
-          date     = helpers.date(obj.created_at),
-          repoName = obj.repo.name;
-
-      return '<li id="'+id+'" class="gollum list-group-item">'+
-               'Edited the wiki '+
-               'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user comments on an issue
-    IssueCommentEvent: function(obj) {
-      var id         = obj.id,
-          date       = helpers.date(obj.created_at),
-          repoName   = obj.repo.name,
-          issueType  = helpers.issueType(obj.payload.issue),
-          issueID    = obj.payload.issue.number,
-          commentURL = null;
-
-      // A Pull Request is a special type of issue.
-      // All Pull Requests are Issues, but not all Issues are Pull Requests.
-
-      if (issueType === 'pull request') {
-        commentURL = obj.payload.issue.pull_request.html_url+
-                     '#issuecomment-'+obj.payload.comment.id;
-      } else {
-        commentURL = obj.payload.comment.html_url;
+      // Populate widget header with user info
+      if (view === 'profile') {
+        return (data.name) ? templates.profileWithName(data) : templates.profileWithoutName(data);
       }
 
-      return '<li id="'+id+'" class="issue-comment list-group-item">'+
-               'Commented on '+issueType+' <a href="'+commentURL+'">#'+issueID+'</a> '+
-               'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user creates, closes, or reopens an issue
-    IssuesEvent: function(obj) {
-      var id       = obj.id,
-          date     = helpers.date(obj.created_at),
-          repoName = obj.repo.name,
-          action   = helpers.capitalize(obj.payload.action),
-          issueID  = obj.payload.issue.number,
-          issueURL = obj.payload.issue.html_url;
+      // Append event info to the widget body
+      if (view === 'event') {
 
-      return '<li id="'+id+'" class="issues list-group-item">'+
-               action+' issue <a href="'+issueURL+'">#'+issueID+'</a> '+
-               'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user adds another user to a repository as a collaborator
-    MemberEvent: function(obj) {
-      var id       = obj.id,
-          date     = helpers.date(obj.created_at),
-          repoName = obj.repo.name,
-          userName = obj.payload.member.login,
-          userURL  = obj.payload.member.html_url;
+        // Comment on a Commit
+        if (data.type === 'CommitCommentEvent') {
+          return templates.commentOnCommit(data);
+        }
 
-      return '<li id="'+id+'" class="member list-group-item">'+
-               'Added <a href="'+userURL+'">'+userName+'</a> '+
-               'to <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+helpers.date(obj.created_at)+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user makes a private repository public
-    PublicEvent: function(obj) {
-      var id       = obj.id,
-          date     = helpers.date(obj.created_at),
-          repoName = obj.repo.name;
+        // Create a Repository
+        if (data.type === 'CreateEvent' && data.payload.ref_type === 'repository') {
+          return templates.createRepository(data);
+        }
 
-      return '<li id="'+id+'" class="public list-group-item">'+
-               'Open sourced repository <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user creates, closes, reopens, or synchronizes a pull request
-    PullRequestEvent: function(obj) {
-      var id            = obj.id,
-          date          = helpers.date(obj.created_at),
-          repoName      = obj.repo.name,
-          action        = helpers.capitalize(obj.payload.action),
-          pullRequestID = obj.payload.number;
+        // Create a Branch
+        if (data.type === 'CreateEvent' && data.payload.ref_type === 'branch') {
+          return templates.createBranch(data);
+        }
 
-      return '<li id="'+id+'" class="pull-request list-group-item">'+
-               action+' pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
-               'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user comments on the unified diff of a pull request
-    PullRequestReviewCommentEvent: function(obj) {
-      var id            = obj.id,
-          date          = helpers.date(obj.created_at),
-          repoName      = obj.repo.name,
-          commentURL    = obj.payload.comment.html_url,
-          pullRequestID = helpers.tail(obj.payload.comment.pull_request_url);
+        // Create a Tag
+        if (data.type === 'CreateEvent' && data.payload.ref_type === 'tag') {
+          return templates.createTag(data);
+        }
 
-      return '<li id="'+id+'" class="pull-request-review-comment list-group-item">'+
-               'Commented on pull request <a href="'+commentURL+'">#'+pullRequestID+'</a> '+
-               'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user pushes to a branch
-    PushEvent: function(obj) {
-      var id       = obj.id,
-          date     = helpers.date(obj.created_at),
-          repoName = obj.repo.name,
-          count    = (obj.payload.size === 1) ? '1 commit ' : obj.payload.size+' commits ',
-          refTail  = helpers.tail(obj.payload.ref);
+        // Delete a Branch
+        if (data.type === 'DeleteEvent' && data.payload.ref_type === 'branch') {
+          return templates.deleteBranch(data);
+        }
 
-      return '<li id="'+id+'" class="push list-group-item">'+
-               'Pushed '+count+
-               'to <a href="https://github.com/'+repoName+'/tree/'+refTail+'">'+refTail+'</a> '+
-               'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user creates a release
-    ReleaseEvent: function(obj) {
-      var id          = obj.id,
-          date        = helpers.date(obj.created_at),
-          repoName    = obj.repo.name,
-          releaseName = obj.payload.release.name,
-          releaseURL  = obj.payload.release.html_url;
+        // Delete a Tag
+        if (data.type === 'DeleteEvent' && data.payload.ref_type === 'tag') {
+          return templates.deleteTag(data);
+        }
 
-      return '<li id="'+id+'" class="release list-group-item">'+
-               'Created release <a href="'+releaseURL+'">'+releaseName+'</a> '+
-               'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    },
-    // Event: Fires when the user stars a repository
-    WatchEvent: function(obj) {
-      var id       = obj.id,
-          date     = helpers.date(obj.created_at),
-          repoName = obj.repo.name;
+        // Create a Download
+        if (data.type === 'DownloadEvent') {
+          return templates.createDownload(data);
+        }
 
-      return '<li id="'+id+'" class="watch list-group-item">'+
-               'Starred repository <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
-               '<small>'+date+'</small>'+
-             '</li>';
-    }
-  };
+        // Follow a User
+        if (data.type === 'FollowEvent') {
+          return templates.followUser(data);
+        }
 
-  var helpers = {
-    // Capitalize the first letter of a string
-    capitalize: function(str) {
-      return str.charAt(0).toUpperCase() + str.slice(1);
-    },
-    // Convert date string to more friendly version
-    date: function(str) {
-      var d = new Date(str);
-      return (d.getMonth() + 1) + '-' + (d.getDate()) + '-' + (d.getFullYear());
-    },
-    // Determine if an issue is a Pull Request or just a regular Issue
-    issueType: function(issue) {
-      if (issue.pull_request && issue.pull_request.html_url &&
-          issue.pull_request.diff_url && issue.pull_request.patch_url) {
-        return 'pull request';
-      } else {
-        return 'issue';
+        // Apply a patch in the Fork Queue
+        if (data.type === 'ForkApplyEvent') {
+          return templates.applyPatch(data);
+        }
+
+        // Fork a Repository
+        if (data.type === 'ForkEvent') {
+          return templates.forkRepository(data);
+        }
+
+        // Create a Gist
+        if (data.type === 'GistEvent' && data.payload.action === 'create') {
+          return templates.createGist(data);
+        }
+
+        // Update a Gist
+        if (data.type === 'GistEvent' && data.payload.action === 'update') {
+          return templates.updateGist(data);
+        }
+
+        // Edit a Wiki
+        if (data.type === 'GollumEvent') {
+          return templates.editWiki(data);
+        }
+
+        // Comment on an Issue
+        if (data.type === 'IssueCommentEvent' && helpers.issueType(data.payload.issue) === 'issue') {
+          return templates.commentOnIssue(data);
+        }
+
+        // Comment on a Pull Request
+        if (data.type === 'IssueCommentEvent' && helpers.issueType(data.payload.issue) === 'pull request') {
+          return templates.commentOnPullRequest(data);
+        }
+
+        // Open an Issue
+        if (data.type === 'IssuesEvent' && data.payload.action === 'opened') {
+          return templates.openIssue(data);
+        }
+
+        // Close an Issue
+        if (data.type === 'IssuesEvent' && data.payload.action === 'closed') {
+          return templates.closeIssue(data);
+        }
+
+        // Reopen an Issue
+        if (data.type === 'IssuesEvent' && data.payload.action === 'reopened') {
+          return templates.reopenIssue(data);
+        }
+
+        // Add a User to a Repository
+        if (data.type === 'MemberEvent') {
+          return templates.addUserToRepository(data);
+        }
+
+        // Open Source a Repository
+        if (data.type === 'PublicEvent') {
+          return templates.openSourceRepository(data);
+        }
+
+        // Open a Pull Request
+        if (data.type === 'PullRequestEvent' && data.payload.action === 'opened') {
+          return templates.openPullRequest(data);
+        }
+
+        // Close a Pull Request
+        if (data.type === 'PullRequestEvent' && data.payload.action === 'closed') {
+          return templates.closePullRequest(data);
+        }
+
+        // Reopen a Pull Request
+        if (data.type === 'PullRequestEvent' && data.payload.action === 'reopened') {
+          return templates.reopenPullRequest(data);
+        }
+
+        // Synchronize a Pull Request
+        if (data.type === 'PullRequestEvent' && data.payload.action === 'synchronized') {
+          return templates.synchronizePullRequest(data);
+        }
+
+        // Comment on the Unified Diff of a Pull Request
+        if (data.type === 'PullRequestReviewCommentEvent') {
+          return templates.commentOnPullRequestDiff(data);
+        }
+
+        // Push to a Branch
+        if (data.type === 'PushEvent') {
+          return templates.pushToBranch(data);
+        }
+
+        // Create a Release
+        if (data.type === 'ReleaseEvent') {
+          return templates.createRelease(data);
+        }
+
+        // Star a Repository
+        if (data.type === 'WatchEvent') {
+          return templates.starRepository(data);
+        }
       }
-    },
-    // Get the last piece of a slash separated string (such as an URL or Git ref)
-    tail: function(str) {
-      return str.split("/").pop();
-    }
-  };
+    };
+
+    return {
+      boilerplate: function() { return render('boilerplate'); },
+      profile: function(data) { return render('profile', data); },
+      event: function(data) { return render('event', data); }
+    };
+  })();
 
   function GUAWPlugin(element, options) {
     this.container   = $(element);
@@ -338,7 +612,7 @@
      * Initialize the widget and start the polling process
      */
     init: function() {
-      this.container.append(templates.boilerplate());
+      this.container.append(views.boilerplate());
 
       this.widgetHead = this.container.find('.guaw-head');
       this.widgetBody = this.container.find('.guaw-body');
@@ -395,7 +669,7 @@
             console.log(data);
           }
 
-          this.widgetHead.html(templates.profile(data));
+          this.widgetHead.html(views.profile(data));
         }
       });
 
@@ -440,9 +714,7 @@
           var content = '';
 
           for (var i=0; i<data.length; i++) {
-            if (templates[data[i].type]) {
-              content += templates[data[i].type](data[i]);
-            }
+            content += views.event(data[i]);
           }
 
           if (pageNumber === 1) { this.widgetBody.html(''); }
