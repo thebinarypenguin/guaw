@@ -74,7 +74,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-comment"></span> '+
           'Commented on commit <a href="'+commentURL+'">'+commitID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -88,7 +88,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-repo"></span> '+
           'Created repository <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
         '</li>';
@@ -101,7 +101,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-git-branch"></span> '+
           'Created branch <a href="https://github.com/'+repoName+'/tree/'+ref+'">'+ref+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -115,7 +115,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-tag"></span> '+
           'Created tag <a href="https://github.com/'+repoName+'/tree/'+ref+'">'+ref+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -129,7 +129,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-git-branch"></span> '+
           'Deleted branch '+ref+' '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -143,7 +143,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-tag"></span> '+
           'Deleted tag '+ref+' '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -158,7 +158,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-package"></span> '+
           'Created download <a href="'+downloadURL+'">'+downloadName+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -172,7 +172,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-person"></span> '+
           'Started following <a href="'+userURL+'">'+userName+'</a> '+
           '<small>'+date+'</small>'+
         '</li>';
@@ -184,7 +184,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-git-merge"></span> '+
           'Applied a patch '+
           'to <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -198,7 +198,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-repo-forked"></span> '+
           'Forked <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           'to <a href="https://github.com/'+forkee+'">'+forkee+'</a> '+
           '<small>'+date+'</small>'+
@@ -212,7 +212,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-gist"></span> '+
           'Created gist <a href="'+gistURL+'">'+gistID+'</a> '+
           '<small>'+date+'</small>'+
         '</li>';
@@ -225,7 +225,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-gist"></span> '+
           'Updated gist <a href="'+gistURL+'">'+gistID+'</a> '+
           '<small>'+date+'</small>'+
         '</li>';
@@ -237,7 +237,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-book"></span> '+
           'Edited the wiki '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -252,7 +252,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-comment"></span> '+
           'Commented on issue <a href="'+commentURL+'">#'+issueID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -267,7 +267,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-comment"></span> '+
           'Commented on pull request <a href="'+commentURL+'">#'+issueID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -282,7 +282,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-issue-opened"></span> '+
           'Opened issue <a href="'+issueURL+'">#'+issueID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -297,7 +297,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-issue-closed"></span> '+
           'Closed issue <a href="'+issueURL+'">#'+issueID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -312,7 +312,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-issue-reopened"></span> '+
           'Reopened issue <a href="'+issueURL+'">#'+issueID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -327,7 +327,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-person"></span> '+
           'Added <a href="'+userURL+'">'+userName+'</a> '+
           'to <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -340,7 +340,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-repo"></span> '+
           'Open sourced repository <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
         '</li>';
@@ -353,7 +353,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-git-pull-request"></span> '+
           'Opened pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -367,7 +367,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-git-pull-request"></span> '+
           'Closed pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -381,7 +381,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-git-pull-request"></span> '+
           'Reopened pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -395,7 +395,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-git-pull-request"></span> '+
           'Synchronized pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -410,7 +410,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-comment"></span> '+
           'Commented on pull request <a href="'+commentURL+'">#'+pullRequestID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -425,7 +425,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-git-commit"></span> '+
           'Pushed '+count+
           'to <a href="https://github.com/'+repoName+'/tree/'+refTail+'">'+refTail+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
@@ -441,7 +441,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-package"></span> '+
           'Created release <a href="'+releaseURL+'">'+releaseName+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -454,7 +454,7 @@
 
         return ''+
         '<li id="'+id+'" class="list-group-item">'+
-          '<span class="octicon octicon-zap"></span> '+
+          '<span class="octicon octicon-star"></span> '+
           'Starred repository <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
         '</li>';
