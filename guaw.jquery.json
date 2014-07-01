@@ -1,6 +1,6 @@
 {
   "name": "guaw",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "title": "GUAW: A GitHub User Activity Widget",
   "description": "A jQuery plugin for displaying GitHub user activity in a handsome little widget.",
   "keywords": ["GitHub", "widget", "activity", "social"],
