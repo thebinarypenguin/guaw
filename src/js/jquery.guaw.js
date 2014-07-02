@@ -17,7 +17,16 @@
       // Convert date string to more friendly version
       date: function(str) {
         var d = new Date(str);
-        return (d.getMonth() + 1) + '-' + (d.getDate()) + '-' + (d.getFullYear());
+
+        // If a fancy date library is available, use it to generate fuzzy relative dates
+        // otherwise use the US-centric month/day/year format
+        if (window.moment) {
+          return window.moment(d).fromNow(); // moment.js
+        } else if ($.timeago) {
+          return $.timeago(d); // jquery.timeago.js
+        } else {
+          return (d.getMonth() + 1) + '-' + (d.getDate()) + '-' + (d.getFullYear());
+        }
       },
       // Determine if an issue is a Pull Request or just a regular Issue
       issueType: function(issue) {
