@@ -19,7 +19,7 @@
         var d = new Date(str);
 
         // If a fancy date library is available, use it to generate fuzzy relative dates
-        // otherwise use the US-centric month/day/year format
+        // otherwise use the US-centric "month-day-year" format
         if (window.moment) {
           return window.moment(d).fromNow(); // moment.js
         } else if ($.timeago) {
