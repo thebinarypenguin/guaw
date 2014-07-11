@@ -639,17 +639,10 @@
      */
     poll: function() {
       this.fetchProfile()
-        .then(function() { return this.fetchActivityPage(1);  })
-        .then(function() { return this.fetchActivityPage(2);  })
-        .then(function() { return this.fetchActivityPage(3);  })
-        .then(function() { return this.fetchActivityPage(4);  })
-        .then(function() { return this.fetchActivityPage(5);  })
-        .then(function() { return this.fetchActivityPage(6);  })
-        .then(function() { return this.fetchActivityPage(7);  })
-        .then(function() { return this.fetchActivityPage(8);  })
-        .then(function() { return this.fetchActivityPage(9);  })
-        .then(function() { return this.fetchActivityPage(10); })
-        .always(function() { setTimeout($.proxy(this.poll, this), this.realTimeout*1000); });
+        .then(this.fetchActivity)
+        .always(function() {
+          setTimeout($.proxy(this.poll, this), this.realTimeout*1000);
+        });
     },
 
     /**
@@ -696,52 +689,74 @@
      * Get user activity and if successful update DOM
      * Returns a promise
      */
-    fetchActivityPage: function(pageNumber) {
-      var url = 'https://api.github.com/users/'+this.settings.username+'/events/public?page='+pageNumber;
+    fetchActivity: function() {
+      var obj = this;
 
-      var promise = $.ajax({
-        url: url,
-        headers: {'Accept': 'application/vnd.github.v3+json'},
-        dataType: 'json',
-        ifModified: true,
-        context: this
-      });
+      var master = new $.Deferred();
 
-      // Success, if new data update DOM
-      promise.done(function(data, status, xhr) {
-        this.setRealTimeout(xhr.getResponseHeader('X-Poll-Interval'));
+      var fetch = function(url) {
+        var firstPageURL = 'https://api.github.com/users/'+obj.settings.username+'/events/public';
 
-        if (this.settings.debug) {
-          console.log('Fetch '+url+' ('+xhr.status+' '+xhr.statusText+')');
+        if (url === undefined) {
+          url = firstPageURL;
         }
 
-        if (data) {
+        var promise = $.ajax({
+          url: url,
+          headers: {'Accept': 'application/vnd.github.v3+json'},
+          dataType: 'json',
+          ifModified: true,
+          context: obj
+        });
+
+        // Success, if new data update DOM
+        promise.done(function(data, status, xhr) {
+          this.setRealTimeout(xhr.getResponseHeader('X-Poll-Interval'));
+
           if (this.settings.debug) {
-            console.log(data);
+            console.log('Fetch '+url+' ('+xhr.status+' '+xhr.statusText+')');
           }
 
-          var content = '';
+          if (data) {
+            if (this.settings.debug) {
+              console.log(data);
+            }
 
-          for (var i=0; i<data.length; i++) {
-            content += views.event(data[i]);
+            var content = '';
+
+            for (var i=0; i<data.length; i++) {
+              content += views.event(data[i]);
+            }
+
+            if (url === firstPageURL) { this.widgetBody.html(''); }
+
+            this.widgetBody.append(content);
+
+            var matches = /<(\S+)>; rel="next"/.exec(xhr.getResponseHeader('Link'));
+
+            if (matches) {
+              fetch(matches[1]);
+            } else {
+              master.resolve();
+            }
+          }
+        });
+
+        // Failure, ...
+        promise.fail(function(xhr, status, error) {
+          this.setRealTimeout(xhr.getResponseHeader('X-Poll-Interval'));
+
+          if (this.settings.debug) {
+            console.log('Fetch '+url+' ('+xhr.status+' '+xhr.statusText+')');
           }
 
-          if (pageNumber === 1) { this.widgetBody.html(''); }
+          master.reject();
+        });
+      };
 
-          this.widgetBody.append(content);
-        }
-      });
+      fetch();
 
-      // Failure, ...
-      promise.fail(function(xhr, status, error) {
-        this.setRealTimeout(xhr.getResponseHeader('X-Poll-Interval'));
-
-        if (this.settings.debug) {
-          console.log('Fetch '+url+' ('+xhr.status+' '+xhr.statusText+')');
-        }
-      });
-
-      return promise;
+      return master.promise();
     },
 
     /**
