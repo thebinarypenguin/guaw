@@ -745,15 +745,14 @@
               this.widgetBody.append(content);
             }
 
-            // Parse the "next" url out of the Link header
+            // If Link header contains a "next" url then fetch it
             matches = /<(\S+)>; rel="next"/.exec(xhr.getResponseHeader('Link'));
-
             if (matches) {
               fetch(matches[1]);
-            } else {
-              master.resolve();
             }
           }
+
+          master.resolve();
         });
 
         // Failure, ...
