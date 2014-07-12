@@ -650,9 +650,11 @@
      * Returns a promise
      */
     fetchProfile: function() {
-      var url = 'https://api.github.com/users/'+this.settings.username;
+      var url, promise;
 
-      var promise = $.ajax({
+      url = 'https://api.github.com/users/'+this.settings.username;
+
+      promise = $.ajax({
         url: url,
         headers: {'Accept': 'application/vnd.github.v3+json'},
         dataType: 'json',
@@ -671,6 +673,7 @@
             console.log(data);
           }
 
+          // Populate widget head
           this.widgetHead.html(views.profile(data));
         }
       });
@@ -690,18 +693,22 @@
      * Returns a promise
      */
     fetchActivity: function() {
-      var obj = this;
+      var obj, master, fetch;
 
-      var master = new $.Deferred();
+      obj = this;
 
-      var fetch = function(url) {
-        var firstPageURL = 'https://api.github.com/users/'+obj.settings.username+'/events/public';
+      master = new $.Deferred();
+
+      fetch = function(url) {
+        var firstPageURL, promise;
+
+        firstPageURL = 'https://api.github.com/users/'+obj.settings.username+'/events/public';
 
         if (url === undefined) {
           url = firstPageURL;
         }
 
-        var promise = $.ajax({
+        promise = $.ajax({
           url: url,
           headers: {'Accept': 'application/vnd.github.v3+json'},
           dataType: 'json',
@@ -711,28 +718,35 @@
 
         // Success, if new data update DOM
         promise.done(function(data, status, xhr) {
-          this.setRealTimeout(xhr.getResponseHeader('X-Poll-Interval'));
+          var content, matches, i;
 
           if (this.settings.debug) {
             console.log('Fetch '+url+' ('+xhr.status+' '+xhr.statusText+')');
           }
+
+          // Read X-Poll-Interval header to get the polite minimum timeout
+          this.setRealTimeout(xhr.getResponseHeader('X-Poll-Interval'));
 
           if (data) {
             if (this.settings.debug) {
               console.log(data);
             }
 
-            var content = '';
-
-            for (var i=0; i<data.length; i++) {
+            // Build-up content by passing the data through the view templates
+            content = '';
+            for (i=0; i<data.length; i++) {
               content += views.event(data[i]);
             }
 
-            if (url === firstPageURL) { this.widgetBody.html(''); }
+            // Populate the widget body
+            if (url === firstPageURL) {
+              this.widgetBody.html('').append(content);
+            } else {
+              this.widgetBody.append(content);
+            }
 
-            this.widgetBody.append(content);
-
-            var matches = /<(\S+)>; rel="next"/.exec(xhr.getResponseHeader('Link'));
+            // Parse the "next" url out of the Link header
+            matches = /<(\S+)>; rel="next"/.exec(xhr.getResponseHeader('Link'));
 
             if (matches) {
               fetch(matches[1]);
@@ -744,11 +758,12 @@
 
         // Failure, ...
         promise.fail(function(xhr, status, error) {
-          this.setRealTimeout(xhr.getResponseHeader('X-Poll-Interval'));
-
           if (this.settings.debug) {
             console.log('Fetch '+url+' ('+xhr.status+' '+xhr.statusText+')');
           }
+
+          // Read X-Poll-Interval header to get the polite minimum timeout
+          this.setRealTimeout(xhr.getResponseHeader('X-Poll-Interval'));
 
           master.reject();
         });
