@@ -43,7 +43,7 @@ module.exports = function(grunt) {
       options: {
         files: ['guaw.jquery.json'],
         updateConfigs: ['pkg'],
-        commitFiles: ['-a'],
+        commitFiles: ['.'],
         push: false,
         pushTo: 'origin'
       }
