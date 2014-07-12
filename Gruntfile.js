@@ -44,8 +44,8 @@ module.exports = function(grunt) {
         files: ['guaw.jquery.json'],
         updateConfigs: ['pkg'],
         commitFiles: ['.'],
-        push: false,
-        //pushTo: 'origin'
+        push: true,
+        pushTo: 'origin'
       }
     }
   });
