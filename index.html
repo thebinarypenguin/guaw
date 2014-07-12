@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GUAW - A GitHub User Activity Widget</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/jquery.guaw.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <h1 id="title">GUAW</h1>
+          <p id="description">A jQuery plugin for displaying GitHub user activity in a handsome little widget</p>
+          <p id="buttons">
+            <a class="btn btn-lg btn-primary" href="https://github.com/thebinarypenguin/guaw">View on GitHub</a>
+          </p>
+        </div>
+        <div id="example" class="col-sm-6"></div>
+      </div>
+        <p id="credits" class="text-muted">
+          Created by <a href="http://thebinarypenguin.com">TheBinaryPenguin</a> and
+          licensed under the <a href="https://github.com/thebinarypenguin/guaw/blob/master/LICENSE">MIT license</a>
+        </p>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script src="js/jquery.guaw.min.js"></script>
+    <script>
+      $(function(){
+        $('#example').guaw({username: 'octocat'});
+      });
+    </script>
+  </body>
+</html>

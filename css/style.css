@@ -1,0 +1,10 @@
+body { background-color: #f8f8f8; }
+
+.container { max-width: 970px; padding-top: 20px; }
+
+#title       { font-size: 50px;                           }
+#description { font-size: 18px;                           }
+#buttons     { margin: 40px 0 40px 0;                     }
+#credits     { margin: 40px 0 20px 0; text-align: center; }
+
+
