@@ -45,7 +45,7 @@ module.exports = function(grunt) {
         updateConfigs: ['pkg'],
         commitFiles: ['.'],
         push: false,
-        pushTo: 'origin'
+        //pushTo: 'origin'
       }
     }
   });
