@@ -38,6 +38,15 @@ module.exports = function(grunt) {
         src: 'src/css/jquery.<%= pkg.name %>.css',
         dest: 'dist/css/jquery.<%= pkg.name %>.min.css'
       },
+    },
+    bump: {
+      options: {
+        files: ['guaw.jquery.json'],
+        updateConfigs: ['pkg'],
+        commitFiles: ['-a'],
+        push: false,
+        pushTo: 'origin'
+      }
     }
   });
 
@@ -46,7 +55,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-bump');
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'clean', 'uglify', 'cssmin']);
+
+  grunt.registerTask('release', 'Release a new version', function(target) {
+    if (!target) {
+      target = 'patch';
+    }
+    return grunt.task.run('bump-only:' + target, 'jshint', 'clean', 'uglify', 'cssmin', 'bump-commit');
+  });
 };
