@@ -638,10 +638,12 @@
      * Uses setTimeout to recursively loop indefinitely
      */
     poll: function() {
-      this.fetchProfile()
-        .then(this.fetchActivity)
+      var obj = this;
+
+      obj.fetchProfile()
+        .then(obj.fetchActivity)
         .always(function() {
-          setTimeout($.proxy(this.poll, this), this.realTimeout*1000);
+          setTimeout($.proxy(obj.poll, obj), obj.realTimeout*1000);
         });
     },
 
