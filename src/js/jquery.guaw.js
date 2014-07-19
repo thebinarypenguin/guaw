@@ -747,14 +747,17 @@
               this.widgetBody.append(content);
             }
 
-            // If Link header contains a "next" url then fetch it
+            // If Link header contains a "next" url then fetch it, otherwise we're done
             matches = /<(\S+)>; rel="next"/.exec(xhr.getResponseHeader('Link'));
             if (matches) {
               fetch(matches[1]);
+            } else {
+              master.resolve();
             }
+          } else {
+            // No data, probably got "304 Not Modified"
+            master.resolve();
           }
-
-          master.resolve();
         });
 
         // Failure, ...
