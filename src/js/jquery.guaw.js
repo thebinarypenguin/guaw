@@ -82,7 +82,7 @@
             commitID   = data.payload.comment.commit_id.substring(0,7);
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Commented on commit <a href="'+commentURL+'">'+commitID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -95,7 +95,7 @@
             ref      = data.payload.ref;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Created repository <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
         '</li>';
@@ -107,7 +107,7 @@
             ref      = data.payload.ref;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Created branch <a href="https://github.com/'+repoName+'/tree/'+ref+'">'+ref+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -120,7 +120,7 @@
             ref      = data.payload.ref;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Created tag <a href="https://github.com/'+repoName+'/tree/'+ref+'">'+ref+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -133,7 +133,7 @@
             ref      = data.payload.ref;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Deleted branch '+ref+' '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -146,7 +146,7 @@
             ref      = data.payload.ref;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Deleted tag '+ref+' '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -160,7 +160,7 @@
             downloadURL  = data.payload.download.html_url;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Created download <a href="'+downloadURL+'">'+downloadName+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -173,7 +173,7 @@
             userURL  = data.payload.target.html_url;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Started following <a href="'+userURL+'">'+userName+'</a> '+
           '<small>'+date+'</small>'+
         '</li>';
@@ -184,7 +184,7 @@
             repoName = data.repo.name;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Applied a patch '+
           'to <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -197,7 +197,7 @@
             forkee   = data.payload.forkee.full_name;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Forked <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           'to <a href="https://github.com/'+forkee+'">'+forkee+'</a> '+
           '<small>'+date+'</small>'+
@@ -210,7 +210,7 @@
             gistURL  = data.payload.gist.html_url;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Created gist <a href="'+gistURL+'">'+gistID+'</a> '+
           '<small>'+date+'</small>'+
         '</li>';
@@ -222,7 +222,7 @@
             gistURL  = data.payload.gist.html_url;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Updated gist <a href="'+gistURL+'">'+gistID+'</a> '+
           '<small>'+date+'</small>'+
         '</li>';
@@ -233,7 +233,7 @@
             repoName = data.repo.name;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Edited the wiki '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -247,7 +247,7 @@
             commentURL = data.payload.comment.html_url;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Commented on issue <a href="'+commentURL+'">#'+issueID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -261,7 +261,7 @@
             commentURL = data.payload.issue.pull_request.html_url+'#issuecomment-'+data.payload.comment.id;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Commented on pull request <a href="'+commentURL+'">#'+issueID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -275,7 +275,7 @@
             issueURL = data.payload.issue.html_url;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Opened issue <a href="'+issueURL+'">#'+issueID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -289,7 +289,7 @@
             issueURL = data.payload.issue.html_url;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Closed issue <a href="'+issueURL+'">#'+issueID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -303,7 +303,7 @@
             issueURL = data.payload.issue.html_url;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Reopened issue <a href="'+issueURL+'">#'+issueID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -317,7 +317,7 @@
             userURL  = data.payload.member.html_url;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Added <a href="'+userURL+'">'+userName+'</a> '+
           'to <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -329,7 +329,7 @@
             repoName = data.repo.name;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Open sourced repository <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
         '</li>';
@@ -341,7 +341,7 @@
             pullRequestID = data.payload.number;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Opened pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -354,7 +354,7 @@
             pullRequestID = data.payload.number;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Closed pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -367,7 +367,7 @@
             pullRequestID = data.payload.number;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Reopened pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -380,7 +380,7 @@
             pullRequestID = data.payload.number;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Synchronized pull request <a href="https://github.com/'+repoName+'/pull/'+pullRequestID+'">#'+pullRequestID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -394,7 +394,7 @@
             pullRequestID = helpers.tail(data.payload.comment.pull_request_url);
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Commented on pull request <a href="'+commentURL+'">#'+pullRequestID+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -408,7 +408,7 @@
             refTail  = helpers.tail(data.payload.ref);
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Pushed '+count+
           'to <a href="https://github.com/'+repoName+'/tree/'+refTail+'">'+refTail+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
@@ -423,7 +423,7 @@
             releaseURL  = data.payload.release.html_url;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Created release <a href="'+releaseURL+'">'+releaseName+'</a> '+
           'at <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
@@ -435,7 +435,7 @@
             repoName = data.repo.name;
 
         return ''+
-        '<li id="'+id+'" class="list-group-item">'+
+        '<li id="'+id+'">'+
           'Starred repository <a href="https://github.com/'+repoName+'">'+repoName+'</a> '+
           '<small>'+date+'</small>'+
         '</li>';

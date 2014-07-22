@@ -130,6 +130,10 @@
   border-top-width: 0;
 }
 
+.guaw-body li:last-child {
+  border-bottom-width: 0;
+}
+
 .guaw-body li small {
   color: #bbbbbb;
 }
