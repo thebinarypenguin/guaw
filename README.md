@@ -1,5 +1,7 @@
 # Description
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/thebinarypenguin/guaw.svg)](https://greenkeeper.io/)
+
 A jQuery plugin for displaying GitHub user activity in a handsome little widget
 
 [Check out the demo](http://thebinarypenguin.github.io/guaw/)
